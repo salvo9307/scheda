@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Scheda Palestra 3 Giorni</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="shortcut icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Scheda Gym">
+
   <style>
     :root {
       --bg: #0f172a;
@@ -41,7 +50,7 @@
     }
 
     .wrapper {
-      max-width: 1500px;
+      max-width: 980px;
       margin: 0 auto;
     }
 
@@ -67,35 +76,6 @@
       line-height: 1.05;
       letter-spacing: -0.03em;
     }
-	
-	.tabs{
-	  display:flex;
-	  gap:10px;
-	  margin-bottom:20px;
-	}
-
-	.tab-btn{
-	  flex:1;
-	  padding:12px;
-	  border-radius:12px;
-	  border:none;
-	  background:rgba(255,255,255,0.08);
-	  color:white;
-	  font-weight:600;
-	  cursor:pointer;
-	}
-
-	.tab-btn.active{
-	  background:linear-gradient(135deg,#38bdf8,#2563eb);
-	}
-
-	.day{
-	  display:none;
-	}
-
-	.day.active{
-	  display:block;
-	}
 
     .actions {
       display: flex;
@@ -132,11 +112,38 @@
       text-align: right;
     }
 
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 14px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.08);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #38bdf8, #2563eb);
+      color: white;
+    }
+
     .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      align-items: start;
+      display: block;
+    }
+
+    .day {
+      display: none;
+    }
+
+    .day.active {
+      display: block;
     }
 
     .day-card {
@@ -269,12 +276,6 @@
       padding: 0 8px;
     }
 
-    @media (max-width: 1200px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     @media (max-width: 680px) {
       body {
         padding: 12px;
@@ -302,6 +303,22 @@
       .save-status {
         text-align: center;
         min-width: auto;
+      }
+
+      .tabs {
+        position: sticky;
+        top: 10px;
+        z-index: 20;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 6px;
+        border-radius: 16px;
+      }
+
+      .tab-btn {
+        font-size: 13px;
+        padding: 12px 8px;
       }
 
       .day-card {
@@ -403,11 +420,6 @@
       }
     }
   </style>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
-<link rel="apple-touch-icon" href="icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Scheda Gym">
 </head>
 <body>
   <div class="wrapper">
@@ -420,11 +432,13 @@
         <div class="save-status" id="saveStatus">Pronto</div>
       </div>
     </section>
-	<div class="tabs">
-	  <button class="tab-btn active" onclick="showDay(1)">Giorno 1</button>
-	  <button class="tab-btn" onclick="showDay(2)">Giorno 2</button>
-	  <button class="tab-btn" onclick="showDay(3)">Giorno 3</button>
-	</div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showDay(1)">Giorno 1</button>
+      <button class="tab-btn" onclick="showDay(2)">Giorno 2</button>
+      <button class="tab-btn" onclick="showDay(3)">Giorno 3</button>
+    </div>
+
     <section class="grid">
       <article class="day-card day" id="day1">
         <div class="day-header">
@@ -559,26 +573,27 @@
       });
       setStatus('Pesi resettati');
     }
-	
-	function showDay(day){
-	  document.querySelectorAll(".day").forEach(d=>{
-		d.classList.remove("active");
-	  });
 
-	  document.querySelectorAll(".tab-btn").forEach(b=>{
-		b.classList.remove("active");
-	  });
+    function showDay(day) {
+      document.querySelectorAll('.day').forEach(d => {
+        d.classList.remove('active');
+      });
 
-	  document.getElementById("day"+day).classList.add("active");
-	  document.querySelectorAll(".tab-btn")[day-1].classList.add("active");
-	}
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+      });
 
-	showDay(1);
+      document.getElementById('day' + day).classList.add('active');
+      document.querySelectorAll('.tab-btn')[day - 1].classList.add('active');
+      localStorage.setItem('scheda-palestra-active-day', day);
+    }
 
     document.querySelectorAll('input[data-key]').forEach(input => {
       input.addEventListener('input', saveWeights);
     });
 
+    const savedDay = parseInt(localStorage.getItem('scheda-palestra-active-day') || '1', 10);
+    showDay(savedDay);
     loadWeights();
   </script>
 </body>
