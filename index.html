@@ -67,6 +67,35 @@
       line-height: 1.05;
       letter-spacing: -0.03em;
     }
+	
+	.tabs{
+	  display:flex;
+	  gap:10px;
+	  margin-bottom:20px;
+	}
+
+	.tab-btn{
+	  flex:1;
+	  padding:12px;
+	  border-radius:12px;
+	  border:none;
+	  background:rgba(255,255,255,0.08);
+	  color:white;
+	  font-weight:600;
+	  cursor:pointer;
+	}
+
+	.tab-btn.active{
+	  background:linear-gradient(135deg,#38bdf8,#2563eb);
+	}
+
+	.day{
+	  display:none;
+	}
+
+	.day.active{
+	  display:block;
+	}
 
     .actions {
       display: flex;
@@ -375,20 +404,11 @@
     }
   </style>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-  <link rel="shortcut icon" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Scheda Gym">
+<meta name="theme-color" content="#0f172a">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Scheda Gym">
 </head>
-  <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js");
-    });
-  }
-</script>
 <body>
   <div class="wrapper">
     <section class="hero">
@@ -400,9 +420,13 @@
         <div class="save-status" id="saveStatus">Pronto</div>
       </div>
     </section>
-
+	<div class="tabs">
+	  <button class="tab-btn active" onclick="showDay(1)">Giorno 1</button>
+	  <button class="tab-btn" onclick="showDay(2)">Giorno 2</button>
+	  <button class="tab-btn" onclick="showDay(3)">Giorno 3</button>
+	</div>
     <section class="grid">
-      <article class="day-card">
+      <article class="day-card day" id="day1">
         <div class="day-header">
           <div class="badge">Giorno 1</div>
           <h2>Petto · Spalle</h2>
@@ -431,7 +455,7 @@
         </div>
       </article>
 
-      <article class="day-card">
+      <article class="day-card day" id="day2">
         <div class="day-header">
           <div class="badge">Giorno 2</div>
           <h2>Schiena · Bicipiti · Tricipiti</h2>
@@ -462,7 +486,7 @@
         </div>
       </article>
 
-      <article class="day-card">
+      <article class="day-card day" id="day3">
         <div class="day-header">
           <div class="badge">Giorno 3</div>
           <h2>Gambe</h2>
@@ -535,6 +559,21 @@
       });
       setStatus('Pesi resettati');
     }
+	
+	function showDay(day){
+	  document.querySelectorAll(".day").forEach(d=>{
+		d.classList.remove("active");
+	  });
+
+	  document.querySelectorAll(".tab-btn").forEach(b=>{
+		b.classList.remove("active");
+	  });
+
+	  document.getElementById("day"+day).classList.add("active");
+	  document.querySelectorAll(".tab-btn")[day-1].classList.add("active");
+	}
+
+	showDay(1);
 
     document.querySelectorAll('input[data-key]').forEach(input => {
       input.addEventListener('input', saveWeights);
@@ -543,6 +582,4 @@
     loadWeights();
   </script>
 </body>
-
 </html>
-
